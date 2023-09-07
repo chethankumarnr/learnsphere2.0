@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+	<style>
+		.container {
+			margin-top: 20px;
+			text-align: center;
+		}
+		.video-container {
+			margin-top: 10px;
+		}
+		.dropdown-video {
+			width: 560px;
+			background-color: #f2f2f2;
+			margin: 10px auto;
+		}
+		.dropdown-video .video-title {
+			color: #333;
+			font-size: 18px;
+			padding: 10px;
+			background-color: #e9ecef;
+			cursor: pointer;
+		}
+		.dropdown-video .video-frame {
+			display: none;
+			padding: 10px;
+			width:500px;
+		}
+	</style>
+</head>
+<body>
+	<div class="container">
+		<h1 th:text="${course.coursename}" style="color: #333;"></h1>
+		<h2 th:text="${course.price}" style="color: #555;"></h2>
+		<div th:each="lsn:${lessons}">
+			<div class="dropdown-video">
+				<div class="video-title" onclick="toggleVideo(this)">
+					<h3 th:text="${lsn.topics}" style="color: #666;"></h3>
+				</div>
+				<div class="video-frame">
+					<iframe width="540" height="315" th:src="${lsn.link}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+				</div>
+			</div>
+			<div>
+				<form id="deleteForm" th:action="@{/deletelesson}" method="POST">
+					<input type="hidden" name="_method" value="DELETE">
+					<input type="hidden" name="LessonId" th:value="${lsn.LessonId}">
+					<input type="hidden" name="id" th:value="${course.id}">
+					<button type="submit" class="btn btn-danger">Delete</button>
+				</form>
+				<br>
+				<div>
+					<button class="btn btn-primary" onclick="loadEditForm(this)" data-lesson-id="${lsn.id}" data-topic="${lsn.topics}" data-link="${lsn.link}">Update</button>
+				</div>
+				<div id="editFormContainer-${lsn.id}" style="display: none;">
+					<form action="/updatelesson" id="editForm-${lsn.id}" class="edit-form">
+						<input type="hidden" name="lessonId" th:value="${lsn.LessonId}">
+						<div>
+							<br>
+							<label>Topic:</label>
+							<input type="text" name="topics" th:value="${lsn.topics}">
+						</div>
+						<div>
+							<br>
+							<label>Link:</label>
+							<input type="text" name="link" th:value="${lsn.link}">
+						</div>
+						<button type="submit" class="btn btn-success">Save</button>
+					</form>
+				</div>
+			</div>
+			
+			<div class="comment-section">
+					<h4>Comments</h4>
+					<div th:each="comment : ${lsn.comments}">
+						<div class="comment">
+							<p th:text="${comment.scomment}"></p>
+							<div>
+								
+								
+								
+								
+								<form action="/addanswer" method="post">
+									<input type="hidden" name="_method" value="">
+									<input hidden type="text" th:value="${lsn.getCourse().getId()}" name="lsnid">
+									<input hidden type="text" th:value="${comment.getCommentid()}" name="cmid">
+									<input type="text" th:value="${comment.getTcomment()}" name="tcomment" placeholder="Reply">
+									<input type="submit">
+								</form>
+							</div>
+							<p th:text="${comment.tcomment}"></p>
+							
+							
+							
+						</div>
+					</div>
+				</div>
+			
+			
+		</div>
+	</div>
+
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+	<script>
+		$(document).ready(function() {
+			$('#deleteForm').submit(function(event) {
+				event.preventDefault(); // Prevent form submission
+
+				var form = $(this);
+				var url = form.attr('action');
+				var formData = form.serialize(); // Serialize form data
+
+				$.ajax({
+					type: 'POST',
+					url: url,
+					data: formData,
+					success: function(response) {
+						// Handle the success response, if needed
+						location.reload(); // Refresh the page
+					},
+					error: function(xhr, status, error) {
+						// Handle the error response, if needed
+						console.log('An error occurred while deleting the lesson.');
+					}
+				});
+			});
+		});
+
+		function toggleVideo(element) {
+			const videoFrame = element.nextElementSibling;
+			videoFrame.style.display = videoFrame.style.display === 'none' ? 'block' : 'none';
+		}
+
+		function loadEditForm(button) {
+			const lessonId = button.getAttribute('data-lesson-id');
+			const editFormContainer = document.getElementById(`editFormContainer-${lessonId}`);
+			const saveButton = button.parentElement.querySelector('.btn-success');
+			editFormContainer.style.display = 'block';
+			saveButton.style.display = 'none';
+		}
+
+		$(document).ready(function() {
+			$('.edit-form').submit(function(event) {
+				event.preventDefault(); // Prevent form submission
+
+				var form = $(this);
+				var url = form.attr('action');
+				var formData = form.serialize(); // Serialize form data
+
+				$.ajax({
+					type: 'PUT',
+					url: url,
+					data: formData,
+					success: function(response) {
+						// Handle the success response, if needed
+						location.reload(); // Refresh the page
+					},
+					error: function(xhr, status, error) {
+						// Handle the error response, if needed
+						console.log('An error occurred while updating the lesson.');
+					}
+				});
+
+				// Hide the edit form container after submitting
+				var lessonId = form.find('input[name="lessonId"]').val();
+				var editFormContainer = $('#editFormContainer-' + lessonId);
+				editFormContainer.hide();
+			});
+		});
+	</script>
+	
+	<
+	
+	
+</body>
+</html>

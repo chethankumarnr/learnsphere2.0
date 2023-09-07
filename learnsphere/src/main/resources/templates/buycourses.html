@@ -1,0 +1,88 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+          crossorigin="anonymous">
+
+    <title>Buy Courses || LearnSphere</title>
+    <style>
+        .course-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .course-card {
+            width: 280px;
+            margin: 10px;
+            border: 1px solid #ddd;
+            padding: 10px;
+            border-radius: 5px;
+        }
+
+        .course-card h5 {
+            margin-bottom: 10px;
+        }
+
+        .course-card p {
+            margin-bottom: 5px;
+        }
+    </style>
+</head>
+
+<body style="margin: 10px 3%">
+<h6 style="text-align:right">Sort By: <select onchange="sorts()">
+        <option>Sort By:</option>
+        <option value="1">Names</option>
+    </select></h6>
+
+<div class="course-container">
+    <div class="course-card" th:each="cr : ${course}">
+        <h5 th:text="${cr.coursename}"></h5>
+        <p>COURSE ID: <span th:text="${cr.id}"></span></p>
+        <p>COURSE PRICE: <span th:text="${cr.price}"></span></p>
+
+        
+<br>
+        <form action="/buy" method="GET">
+            <input type="hidden" th:value="${cr.id}" name="id">
+            <button type="submit" class="btn btn-primary">Buy Course</button>
+        </form>
+
+</div>
+    </div>
+</div>
+
+<a href="/buycourses"><button class="btn btn-primary btn-lg">Back</button></a>
+<h2 th:text="${msg}"></h2>
+<p th:text="${check}"></p>
+<script>
+    function sorts() {
+        location.href = "/students/sort";
+    }
+</script>
+<!-- Optional JavaScript -->
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+        integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+        crossorigin="anonymous"></script>
+<script
+        src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js"
+        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+        crossorigin="anonymous"></script>
+<script
+        src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js"
+        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+        crossorigin="anonymous"></script>
+</body>
+
+</html>

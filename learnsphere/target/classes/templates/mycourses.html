@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>MyCourses || LearnSphere</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f8f8f8;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .course-card {
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            margin: 10px;
+            padding: 20px;
+            flex-basis: 300px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-width: 150px;
+             max-width: 150px;
+            min-height: 150px;
+            word-wrap: break-word; /* Added */
+        }
+
+        .course-card:hover {
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .course-card a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .course-card h3 {
+            margin-top: 0;
+        }
+
+        .course-card p {
+            margin-top: 10px;
+            margin-bottom: 0;
+            text-align: center;
+        }
+
+        .empty-message {
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+    <h1 style="text-align: center;">Purchased Courses</h1>
+    <div class="container">
+        <div th:if="${cr.isEmpty()}" class="empty-message">
+            <p>Sorry...!! No Courses to display</p>
+            <p><a href="/buycourses">Click Here to Buy Courses</a></p>
+        </div>
+        <div th:each="c:${cr}">
+            <a th:href="@{'/lessons/' + ${c.id}}">
+                <div class="course-card">
+                    <h3 th:text="${c.coursename}"></h3>
+                    
+                </div>
+            </a>
+        </div>
+    </div>
+</body>
+
+</html>
